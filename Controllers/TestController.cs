@@ -33,10 +33,10 @@ namespace ExpensesTracker.Controllers
         [Route("api/postRoute")]
         [HttpGet]
 
-        public async Task<IActionResult> GetMovieFromForm([FromBody] MovieSearchRequest searchRequest)
+        public async Task<IActionResult> GetMovieFromForm([FromQuery]MovieSearchRequest key1)
         {
 
-
+            
             try
             {
                 var options = new RestClientOptions("https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1");
@@ -44,13 +44,13 @@ namespace ExpensesTracker.Controllers
                 var request = new RestRequest("");
                 request.AddHeader("accept", "application/json");
                 request.AddHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjcyNzNjYWNiMzZiZWI0NmU1YzMxNjJmNmUwNDY0MyIsInN1YiI6IjYzZmZiZGMyOWYxYmU3MDA3Y2E2YmM3ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.C53rNh4eQFNwLBjoRy0Yilk6e_NwDaAmOivcyTI4p-w");
-                request.AddParameter("query", searchRequest.MovieName);
+                request.AddParameter("query", key1.MovieName);
                 var response = await client.GetAsync(request);
 
                 if (response.IsSuccessful)
                 {
                     var responseData = response.Content != null ? JsonConvert.DeserializeObject<ApiResponse>(response.Content) : null;
-                  
+
                     if (responseData?.Results != null)
                     {
                         var resultID = responseData.Results[0].Id;
@@ -62,12 +62,16 @@ namespace ExpensesTracker.Controllers
                         requestSimilarMovies.AddParameter("query", resultID);
                         var responseSimilarMovies = await clientSimilarMovies.GetAsync(requestSimilarMovies);
 
-                        //var parsedData = JsonConvert.DeserializeObject<MovieData>(similarMovies.ToString());
+
 
                         return Ok(responseSimilarMovies.Content);
                     }
- 
-                    return NotFound("No movie found");
+                    else
+                    {
+                        return NotFound("No movie found");
+                    }
+
+
                 }
                 else
                 {
@@ -82,25 +86,8 @@ namespace ExpensesTracker.Controllers
 
 
         }
-       
-        public class Movie
-        {
-            // Define properties according to your JSON structure
-            public bool Adult { get; set; }
-            public string BackdropPath { get; set; }
-            public int[] GenreIds { get; set; }
-            public int Id { get; set; }
-            public string OriginalLanguage { get; set; }
-            public string OriginalTitle { get; set; }
-            public string Overview { get; set; }
-            public double Popularity { get; set; }
-            public string PosterPath { get; set; }
-            public string ReleaseDate { get; set; }
-            public string Title { get; set; }
-            public bool Video { get; set; }
-            public double VoteAverage { get; set; }
-            public int VoteCount { get; set; }
-        }
+
+
     }
 }
 
