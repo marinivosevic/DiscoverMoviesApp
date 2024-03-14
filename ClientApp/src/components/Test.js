@@ -33,7 +33,7 @@ import axios from 'axios';
           },
         });
     
-        setSimilarMovies((prev) => [...prev, ...response.results]);
+        setSimilarMovies((prev) => [...prev, ...response.data.results]);
         
       } catch (error) {
         console.error('Error fetching data:', error);

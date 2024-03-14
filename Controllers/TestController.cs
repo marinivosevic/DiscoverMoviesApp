@@ -33,18 +33,19 @@ namespace ExpensesTracker.Controllers
         [Route("api/postRoute")]
         [HttpGet]
 
-        public async Task<IActionResult> GetMovieFromForm([FromQuery]MovieSearchRequest key1)
+        public async Task<IActionResult> GetMovieFromForm([FromQuery]string key1)
         {
 
             
             try
             {
+                
                 var options = new RestClientOptions("https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1");
                 var client = new RestClient(options);
                 var request = new RestRequest("");
                 request.AddHeader("accept", "application/json");
                 request.AddHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjcyNzNjYWNiMzZiZWI0NmU1YzMxNjJmNmUwNDY0MyIsInN1YiI6IjYzZmZiZGMyOWYxYmU3MDA3Y2E2YmM3ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.C53rNh4eQFNwLBjoRy0Yilk6e_NwDaAmOivcyTI4p-w");
-                request.AddParameter("query", key1.MovieName);
+                request.AddParameter("query", key1);
                 var response = await client.GetAsync(request);
 
                 if (response.IsSuccessful)
