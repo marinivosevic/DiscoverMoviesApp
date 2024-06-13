@@ -141,15 +141,15 @@ namespace ExpensesTracker.Services
             string[] castNames,
             int movieLengthBelow,
             int movieLengthAbove,
-            int movieRatingBelow,
-            int movieRatingAbove,
+            float movieRatingBelow,
+            float movieRatingAbove,
             int releaseYear
         )
         {
             var castIDs = await GetCastId(castNames);
             Console.WriteLine(string.Join(", ", castIDs));
             var genreIDs = await GetGenres(genreName);
-
+            Console.WriteLine(string.Join(", ", genreIDs));
             var queryParams = new Dictionary<string, string>
             {
                 { "language", "en-US" },
@@ -157,23 +157,23 @@ namespace ExpensesTracker.Services
                 { "with_genres", string.Join(",", genreIDs) },
                 { "with_cast", string.Join(",", castIDs) },
                 //{ "without_genres", string.Join(",", genreIDs)},
-                { "with_runtime.lte", movieLengthBelow.ToString() }, //  Runtime below 120 minutes
+               { "with_runtime.lte", movieLengthBelow.ToString() }, //  Runtime below 120 minutes
                 { "with_runtime.gte", movieLengthAbove.ToString() }, //  Runtime above 120 minutes
                 { "vote_average.gte", movieRatingAbove.ToString() },
                 { "vote_average.lte", movieRatingBelow.ToString() },
                 //{"with_keywords" , string.Join(",", keywords)}, //TODO Add support for keywords
 
-                { "primary_release_year", releaseYear.ToString() }
+                { "year", releaseYear.ToString() }
             };
 
             try
             {
-                var response = await FetchDataFromApi<ApiResponse>(
+                var response = await FetchDataFromApiForDiscoverEndpoint(
                     "https://api.themoviedb.org/3/discover/movie",
                     queryParams
                 );
 
-                return response.results;
+                return response.ToList();
             }
             catch (Exception e)
             {
@@ -204,14 +204,13 @@ namespace ExpensesTracker.Services
             }
 
             var response = await client.GetAsync(request);
-            Console.WriteLine("Raw JSON Response: " + response.Content); // Print the raw JSON response
 
             try
             {
                 if (response.IsSuccessful && response.Content != null)
                 {
                     var sgbsdfogb = JsonConvert.DeserializeObject<T>(response.Content);
-                    Console.WriteLine("Deserialized JSON: " + sgbsdfogb);
+
                     return JsonConvert.DeserializeObject<T>(response.Content);
                 }
                 else
@@ -221,8 +220,6 @@ namespace ExpensesTracker.Services
             }
             catch (JsonSerializationException ex)
             {
-                Console.WriteLine("Deserialization error: " + ex.Message);
-                Console.WriteLine("JSON Content: " + response.Content);
                 throw new Exception("Deserialization error: " + ex.Message);
             }
             catch (Exception ex)
@@ -232,7 +229,7 @@ namespace ExpensesTracker.Services
             }
         }
 
-         public async Task<IEnumerable<Movie>> FetchDataFromApiForDiscover(
+        public async Task<List<Movie>> FetchDataFromApiForDiscoverEndpoint(
             string url,
             Dictionary<string, string> queryParams = null
         )
@@ -255,15 +252,13 @@ namespace ExpensesTracker.Services
             }
 
             var response = await client.GetAsync(request);
-            Console.WriteLine("Raw JSON Response: " + response.Content); // Print the raw JSON response
-
+            Console.WriteLine(response.Content);
             try
             {
                 if (response.IsSuccessful && response.Content != null)
                 {
-                    var sgbsdfogb = JsonConvert.DeserializeObject<ApiResponse>(response.Content);
-                    Console.WriteLine("Deserialized JSON: " + sgbsdfogb);
-                    return (IEnumerable<Movie>)JsonConvert.DeserializeObject<Movie>(response.Content);
+                    var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(response.Content);
+                    return apiResponse?.results ?? new List<Movie>();
                 }
                 else
                 {
@@ -272,10 +267,8 @@ namespace ExpensesTracker.Services
             }
             catch (JsonSerializationException ex)
             {
-                Console.WriteLine("Deserialization error: " + ex.Message);
-                Console.WriteLine("JSON Content: " + response.Content);
                 throw new Exception("Deserialization error: " + ex.Message);
-            }
+            } 
             catch (Exception ex)
             {
                 Console.WriteLine("General error: " + ex.Message);

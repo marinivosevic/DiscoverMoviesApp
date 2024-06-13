@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { MovieService } from "../api/movie";
+import { movieService } from "../api/movie";
 import { values } from "@fluentui/react";
 
 const baseURL = "https://localhost:7173/api/Test";
-const postURL = "https://localhost:7173/api/postRoute";
 
 const initialValues = {
   cast: "",
@@ -16,7 +15,7 @@ const initialValues = {
   movieRatingBelow: "",
   movieRatingAbove: "",
   releaseYear: "",
-  mediaType:"",
+  mediaType: "",
 };
 
 const validationSchema = Yup.object({
@@ -30,12 +29,9 @@ const validationSchema = Yup.object({
   mediaType: Yup.string().required("Required"),
 });
 
-
-
 export const Test = () => {
   const [data, setData] = useState([]);
-
-
+  const [movieData, setMovieData] = useState([]);
   useEffect(() => {
     axios
       .get(baseURL)
@@ -52,32 +48,33 @@ export const Test = () => {
   }, []);
 
   const mapData = (values) => {
-    const castArray = values.cast.split(',').map(actor => actor.trim());
-    const genresArray = values.genres.split(',').map(genre => genre.trim());
-    
+    const castArray = values.cast.split(",").map((actor) => actor.trim());
+    const genresArray = values.genres.split(",").map((genre) => genre.trim());
+
     const data = {
       cast: castArray,
       genres: genresArray,
-      movieLengthBelow:values.movieLengthBelow,
-      movieLengthAbove:values.movieLengthAbove,
-      movieRatingBelow:values.movieRatingBelow,
-      movieRatingAbove:values.movieRatingAbove,
-      releaseYear:values.releaseYear,
+      movieLengthBelow: values.movieLengthBelow,
+      movieLengthAbove: values.movieLengthAbove,
+      movieRatingBelow: values.movieRatingBelow,
+      movieRatingAbove: values.movieRatingAbove,
+      releaseYear: values.releaseYear,
     };
     return data;
-  }
+  };
 
   const handleSubmit = (values) => {
     const data = mapData(values);
     console.log(data);
-    axios
-      .post(postURL, data, { headers: { "Content-Type": "application/json" } })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => console.error("Error posting data:", error));
-  }
-  
+    movieService.useDiscoverMovies(data).then((response) => {
+      console.log(response);
+      if (response) {
+        response.forEach((element) => {
+          setMovieData((prev) => [...prev, element]);
+        });
+      }
+    });
+  };
 
   return (
     <div className="flex justify-center align-middle">
@@ -86,52 +83,96 @@ export const Test = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-     {({isSubmiting, values}) => (
-        <Form className="flex flex-col justify-center align-middle">
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="cast">Cast</label>
-            <Field type="text" id="cast" name="cast" className = " border-2 border-black"/>
-            <ErrorMessage name="cast" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="genres">Genres</label>
-            <Field type="text" id="genres" name="genres"className = " border-2 border-black" />
-            <ErrorMessage name="genres" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="movieLengthBelow">Movie Length Below</label>
-            <Field type="number" id="movieLengthBelow" name="movieLengthBelow" className = " border-2 border-black"/>
-            <ErrorMessage name="movieLengthBelow" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="movieLengthAbove">Movie Length Above</label>
-            <Field type="number" id="movieLengthAbove" name="movieLengthAbove" className = " border-2 border-black"/>
-            <ErrorMessage name="movieLengthAbove" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="movieRatingBelow">Movie Rating Below</label>
-            <Field type="number" id="movieRatingBelow" name="movieRatingBelow" className = " border-2 border-black"/>
-            <ErrorMessage name="movieRatingBelow" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="movieRatingAbove">Movie Rating Above</label>
-            <Field type="number" id="movieRatingAbove" name="movieRatingAbove" className = " border-2 border-black"/>
-            <ErrorMessage name="movieRatingAbove" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="releaseYear">Release Year</label>
-            <Field type="number" id="releaseYear" name="releaseYear" className = " border-2 border-black"/>
-            <ErrorMessage name="releaseYear" className=" text-red-500" />
-          </div>
-          <div className="flex flex-col justify-center align-middle">
-            <label htmlFor="mediaType">Media Type</label>
-            <Field type="text" id="mediaType" name="mediaType" className = " border-2 border-black"/>
-            <ErrorMessage name="mediaType" />
-          </div>
-          <button type="submit">Submit</button>
-        </Form>
-     )}
+        {({ isSubmiting, values }) => (
+          <Form className="flex flex-col justify-center align-middle">
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="cast">Cast</label>
+              <Field
+                type="text"
+                id="cast"
+                name="cast"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="cast" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="genres">Genres</label>
+              <Field
+                type="text"
+                id="genres"
+                name="genres"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="genres" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="movieLengthBelow">Movie Length Below</label>
+              <Field
+                type="number"
+                id="movieLengthBelow"
+                name="movieLengthBelow"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="movieLengthBelow" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="movieLengthAbove">Movie Length Above</label>
+              <Field
+                type="number"
+                id="movieLengthAbove"
+                name="movieLengthAbove"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="movieLengthAbove" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="movieRatingBelow">Movie Rating Below</label>
+              <Field
+                type="number"
+                id="movieRatingBelow"
+                name="movieRatingBelow"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="movieRatingBelow" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="movieRatingAbove">Movie Rating Above</label>
+              <Field
+                type="number"
+                id="movieRatingAbove"
+                name="movieRatingAbove"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="movieRatingAbove" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="releaseYear">Release Year</label>
+              <Field
+                type="number"
+                id="releaseYear"
+                name="releaseYear"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="releaseYear" className=" text-red-500" />
+            </div>
+            <div className="flex flex-col justify-center align-middle">
+              <label htmlFor="mediaType">Media Type</label>
+              <Field
+                type="text"
+                id="mediaType"
+                name="mediaType"
+                className=" border-2 border-black"
+              />
+              <ErrorMessage name="mediaType" />
+            </div>
+            <button type="submit">Submit</button>
+          </Form>
+        )}
       </Formik>
+
+      {movieData.map((movie) => (
+        <h2>{movie.title}</h2>
+      ))}
     </div>
   );
 };
