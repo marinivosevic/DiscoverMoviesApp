@@ -1,23 +1,30 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import Root from "./Views/Root";
+import ProtectedRoutes from "./Routes/ProtectedRoutes";
+import ErrorPage from "./components/ErrorPage";
+import './custom.css';
+import DiscoverMovieForm from './components/DiscoverMovieForm';
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '',
+        element: <DiscoverMovieForm />,
+      },
+     
+    ],
+  },
+]);
 
+createRoot(document.getElementById("root")).render(
+  <RouterProvider router={router}/>
+);
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-const rootElement = document.getElementById('root');
-const root = createRoot(rootElement);
-
-root.render(
-  <BrowserRouter basename={baseUrl}>
-    <App />
-  </BrowserRouter>);
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
 serviceWorkerRegistration.unregister();
-
-

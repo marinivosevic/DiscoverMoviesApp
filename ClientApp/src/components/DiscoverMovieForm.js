@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { movieService } from "../api/movie";
-import { Outlet } from "react-router-dom";
-import { NavMenu } from "./NavMenu";
+
 
 const initialValues = {
   cast: "",
@@ -28,7 +26,7 @@ const validationSchema = Yup.object({
   mediaType: Yup.string().required("Required"),
 });
 
-const ProtectedRoutes = ({ layout: Layout }) => {
+const DiscoverMovieForm = () => {
   const [movieData, setMovieData] = useState([]);
 
   const mapData = (values) => {
@@ -61,8 +59,7 @@ const ProtectedRoutes = ({ layout: Layout }) => {
   };
 
   return (
-    <Layout>
-    
+  
       <div className="flex justify-center align-middle">
         <Formik
           initialValues={initialValues}
@@ -160,8 +157,8 @@ const ProtectedRoutes = ({ layout: Layout }) => {
           <h2 key={movie.id}>{movie.title}</h2>
         ))}
       </div>
-    </Layout>
+  
   );
 };
 
-export default ProtectedRoutes;
+export default DiscoverMovieForm;
