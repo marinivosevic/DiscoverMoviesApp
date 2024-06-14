@@ -16,13 +16,13 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
-  cast: Yup.string().required("Required"),
-  genres: Yup.string().required("Required"),
-  movieLengthBelow: Yup.number().required("Required"),
-  movieLengthAbove: Yup.number().required("Required"),
-  movieRatingBelow: Yup.number().required("Required"),
-  movieRatingAbove: Yup.number().required("Required"),
-  releaseYear: Yup.number().required("Required"),
+  cast: Yup.string(),
+  genres: Yup.string(),
+  movieLengthBelow: Yup.number(),
+  movieLengthAbove: Yup.number(),
+  movieRatingBelow: Yup.number(),
+  movieRatingAbove: Yup.number(),
+  releaseYear: Yup.number(),
   mediaType: Yup.string().required("Required"),
 });
 

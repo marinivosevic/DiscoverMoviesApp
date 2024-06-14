@@ -67,7 +67,7 @@ namespace ExpensesTracker.Services
                     mediaTypeUrl,
                     searchQueryParams
                 );
-
+                
                 if (searchResult?.results != null && searchResult.results.Any())
                 {
                     var resultID = searchResult.results[0].id;
