@@ -1,6 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 var allowedOrigin = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 // Add services to the container.
+/* var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString)); */
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>

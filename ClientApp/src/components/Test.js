@@ -1,57 +1,57 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { movieService } from "../api/movie";
-import { Outlet } from "react-router-dom";
-import { NavMenu } from "./NavMenu";
+
 
 const initialValues = {
   cast: "",
   genres: "",
-  movieLengthBelow: "",
-  movieLengthAbove: "",
-  movieRatingBelow: "",
-  movieRatingAbove: "",
+  movieLengthBelow: 500,
+  movieLengthAbove: 0,
+  movieRatingBelow: 11,
+  movieRatingAbove: 0,
   releaseYear: "",
   mediaType: "",
 };
 
 const validationSchema = Yup.object({
-  cast: Yup.string().required("Required"),
-  genres: Yup.string().required("Required"),
-  movieLengthBelow: Yup.number().required("Required"),
-  movieLengthAbove: Yup.number().required("Required"),
-  movieRatingBelow: Yup.number().required("Required"),
-  movieRatingAbove: Yup.number().required("Required"),
-  releaseYear: Yup.number().required("Required"),
+  cast: Yup.string(),
+  genres: Yup.string(),
+  movieLengthBelow: Yup.number(),
+  movieLengthAbove: Yup.number(),
+  movieRatingBelow: Yup.number(),
+  movieRatingAbove: Yup.number(),
+  releaseYear: Yup.number(),
   mediaType: Yup.string().required("Required"),
 });
 
-const ProtectedRoutes = ({ layout: Layout }) => {
+const ProtectedRoutes = () => {
   const [movieData, setMovieData] = useState([]);
 
   const mapData = (values) => {
-    const castArray = values.cast.split(",").map((actor) => actor.trim());
-    const genresArray = values.genres.split(",").map((genre) => genre.trim());
-
+    console.log(values);
+    const castArray = values.cast ? values.cast.split(",").map((actor) => actor.trim()) : [];
+    const genresArray = values.genres ? values.genres.split(",").map((genre) => genre.trim()) : [];
+    
     const data = {
       cast: castArray,
       genres: genresArray,
-      movieLengthBelow: values.movieLengthBelow,
-      movieLengthAbove: values.movieLengthAbove,
-      movieRatingBelow: values.movieRatingBelow,
-      movieRatingAbove: values.movieRatingAbove,
-      releaseYear: values.releaseYear,
+      movieLengthBelow: values.movieLengthBelow !== null ? values.movieLengthBelow : 500,
+      movieLengthAbove: values.movieLengthAbove !== null ? values.movieLengthAbove : 0,
+      movieRatingBelow: values.movieRatingBelow !== null ? values.movieRatingBelow : 11,
+      movieRatingAbove: values.movieRatingAbove !== null ? values.movieRatingAbove : 0,
+      releaseYear: values.releaseYear || '',
     };
     return data;
   };
 
   const handleSubmit = (values) => {
+    
     const data = mapData(values);
-    console.log(data);
+    
     movieService.useDiscoverMovies(data).then((response) => {
-      console.log(response);
+      //console.log(response);
       if (response) {
         response.forEach((element) => {
           setMovieData((prev) => [...prev, element]);
@@ -61,9 +61,9 @@ const ProtectedRoutes = ({ layout: Layout }) => {
   };
 
   return (
-    <Layout>
+  
     
-      <div className="flex justify-center align-middle">
+      <div className="flex justify-center align-middle bg-zinc-950">
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -72,7 +72,7 @@ const ProtectedRoutes = ({ layout: Layout }) => {
           {({ isSubmitting }) => (
             <Form className="flex flex-col justify-center align-middle">
               <div className="flex flex-col justify-center align-middle">
-                <label htmlFor="cast">Cast</label>
+                <label htmlFor="cast">anobasoubd</label>
                 <Field
                   type="text"
                   id="cast"
@@ -151,7 +151,7 @@ const ProtectedRoutes = ({ layout: Layout }) => {
                 />
                 <ErrorMessage name="mediaType" />
               </div>
-              {isSubmitting ? <div>Submitting...</div> : <button type="submit">Submit</button>}
+              {isSubmitting ? <div>fndsaoifn...</div> : <button type="submit">Submit</button>}
             </Form>
           )}
         </Formik>
@@ -160,7 +160,7 @@ const ProtectedRoutes = ({ layout: Layout }) => {
           <h2 key={movie.id}>{movie.title}</h2>
         ))}
       </div>
-    </Layout>
+    
   );
 };
 

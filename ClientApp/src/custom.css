@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 /* Provide sufficient contrast against white background */
+body {
+  background-color: #111314;
+}
 a {
   color: #0366d6;
 }

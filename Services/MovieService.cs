@@ -67,7 +67,7 @@ namespace ExpensesTracker.Services
                     mediaTypeUrl,
                     searchQueryParams
                 );
-                
+
                 if (searchResult?.results != null && searchResult.results.Any())
                 {
                     var resultID = searchResult.results[0].id;
@@ -139,32 +139,55 @@ namespace ExpensesTracker.Services
         public async Task<IEnumerable<Movie>?> DiscoverMovies(
             string[] genreName,
             string[] castNames,
-            int movieLengthBelow,
-            int movieLengthAbove,
-            float movieRatingBelow,
-            float movieRatingAbove,
-            int releaseYear
+            int? movieLengthBelow,
+            int? movieLengthAbove,
+            float? movieRatingBelow,
+            float? movieRatingAbove,
+            int? releaseYear
         )
         {
             var castIDs = await GetCastId(castNames);
-            Console.WriteLine(string.Join(", ", castIDs));
             var genreIDs = await GetGenres(genreName);
-            Console.WriteLine(string.Join(", ", genreIDs));
             var queryParams = new Dictionary<string, string>
             {
                 { "language", "en-US" },
-                { "page", "1" },
-                { "with_genres", string.Join(",", genreIDs) },
-                { "with_cast", string.Join(",", castIDs) },
-                //{ "without_genres", string.Join(",", genreIDs)},
-               { "with_runtime.lte", movieLengthBelow.ToString() }, //  Runtime below 120 minutes
-                { "with_runtime.gte", movieLengthAbove.ToString() }, //  Runtime above 120 minutes
-                { "vote_average.gte", movieRatingAbove.ToString() },
-                { "vote_average.lte", movieRatingBelow.ToString() },
-                //{"with_keywords" , string.Join(",", keywords)}, //TODO Add support for keywords
-
-                { "year", releaseYear.ToString() }
+                { "page", "1" }
             };
+
+            if (genreIDs.Any())
+            {
+                queryParams.Add("with_genres", string.Join(",", genreIDs));
+            }
+
+            if (castIDs.Any())
+            {
+                queryParams.Add("with_cast", string.Join(",", castIDs));
+            }
+
+            if (movieLengthBelow.HasValue)
+            {
+                queryParams.Add("with_runtime.lte", movieLengthBelow.Value.ToString());
+            }
+
+            if (movieLengthAbove.HasValue)
+            {
+                queryParams.Add("with_runtime.gte", movieLengthAbove.Value.ToString());
+            }
+
+            if (movieRatingBelow.HasValue)
+            {
+                queryParams.Add("vote_average.lte", movieRatingBelow.Value.ToString());
+            }
+
+            if (movieRatingAbove.HasValue)
+            {
+                queryParams.Add("vote_average.gte", movieRatingAbove.Value.ToString());
+            }
+
+            if (releaseYear != 0)
+            {
+                queryParams.Add("year", releaseYear.Value.ToString());
+            }
 
             try
             {
@@ -268,7 +291,7 @@ namespace ExpensesTracker.Services
             catch (JsonSerializationException ex)
             {
                 throw new Exception("Deserialization error: " + ex.Message);
-            } 
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("General error: " + ex.Message);

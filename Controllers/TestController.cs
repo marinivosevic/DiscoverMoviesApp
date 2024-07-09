@@ -11,8 +11,6 @@ namespace ExpensesTracker.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-     
-
         [Route("api/similarMovies")]
         [HttpGet]
         public async Task<IActionResult> GetSimilarMovies()
@@ -45,28 +43,21 @@ namespace ExpensesTracker.Controllers
 
             if (data != null)
             {
-                Console.WriteLine(
-                    $"{string.Join(", ", data.genres)}, {string.Join(", ", data.cast)}, {data.movieLengthBelow}, {data.movieLengthAbove}, {data.movieRatingAbove}, {data.movieRatingBelow}, {data.releaseYear}"
+                var movieService = new MovieService();
+                var discoveredMovie = await movieService.DiscoverMovies(
+                    data.Genres ?? [],
+                    data.Cast ?? [],
+                    data.MovieLengthBelow,
+                    data.MovieLengthAbove,
+                    data.MovieRatingBelow,
+                    data.MovieRatingAbove,
+                    data.ReleaseYear
                 );
-            }
-            else
-            {
-                return BadRequest("Invalid data");
+
+                return Ok(discoveredMovie);
             }
 
-            var movieService = new MovieService();
-
-            var discoveredMovie = await movieService.DiscoverMovies(
-                data.genres,
-                data.cast,
-                data.movieLengthBelow,
-                data.movieLengthAbove,
-                data.movieRatingAbove,
-                data.movieRatingBelow,
-                data.releaseYear
-            );
-
-            return Ok(discoveredMovie);
+            return BadRequest("Invalid data");
         }
     }
 }
