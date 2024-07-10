@@ -22,7 +22,7 @@ function valuetext(value) {
   };
 
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 300, }}>
       <Slider
         getAriaLabel={() => 'Temperature range'}
         value={value}
@@ -31,6 +31,7 @@ function valuetext(value) {
         getAriaValueText={valuetext}
         min={min} // Assuming 0 as the minimum value
         max={max} // Assuming 120 as the maximum value
+        sx={{color:'#26a8c4'}}
       />
     </Box>
   );

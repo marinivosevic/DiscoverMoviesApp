@@ -20,10 +20,11 @@ export default function MediaGroup({name}) {
           <Box
             sx={{
               mb: 2,
+              
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              color: 'red',
+      
             }}
           >
             <Typography
@@ -49,13 +50,14 @@ export default function MediaGroup({name}) {
               sx={{
                 borderRadius: 'sm',
                 boxShadow: 'sm',
+                mr:2,
               }}
             >
               {['Movie', 'Tv-series', 'Both'].map((value, index) => (
                 <React.Fragment key={value}>
                   {index !== 0 && <ListDivider />}
                   <ListItem>
-                    <Radio id={value} value={value} label={value} sx={{color:'white'}} />
+                    <Radio id={value} value={value} label={value} sx={{color:'white' }} />
                   </ListItem>
                 </React.Fragment>
               ))}

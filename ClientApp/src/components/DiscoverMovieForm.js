@@ -5,7 +5,7 @@ import { movieService } from "../api/movie";
 import FormikSlider from "./FormikSlider";
 import MediaGroup from "./MediaGroup";
 import GenresRadioGroup from "./GenresRadioGroup";
-
+import MovieCard from "./MovieCard";
 const initialValues = {
   cast: "",
   genres: "",
@@ -35,13 +35,11 @@ const DiscoverMovieForm = () => {
     const castArray = values.cast
       ? values.cast.split(",").map((actor) => actor.trim())
       : [];
-    const genresArray = values.genres
-      ? values.genres.split(",").map((genre) => genre.trim())
-      : [];
+    
 
     const data = {
       cast: castArray,
-      genres: genresArray,
+      genres: values.genres,
       movieLengthBelow:
         values.movieLengthBelow !== "" ? values.movieLengthBelow : 500,
       movieLengthAbove:
@@ -69,97 +67,106 @@ const DiscoverMovieForm = () => {
   };
 
   return (
-    <div className="flex justify-center align-middle">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form className="w-full  sm:m-3 " >
-            <div className="flex flex-col sm:flex-row w-full  space-x-4 ">
-              <div className="flex-1">
-                <div className="flex flex-col justify-center align-middle">
-                  <label className="flex justify-center text-white" htmlFor="cast">Cast</label>
-                  <Field
-                    type="text"
-                    id="cast"
-                    name="cast"
-                    className="border-2 border-black"
-                  />
-                  <ErrorMessage name="cast" />
-                </div>
-                <div className="flex flex-col justify-center align-middle">
-                  <label className="flex justify-center text-white" htmlFor="genres">Genres</label>
-                  <Field
-                    type="text"
-                    id="genres"
-                    name="genres"
-                    className="border-2 border-black"
-                  />
-                  <ErrorMessage name="genres" />
-                </div>
-                <div>
-                  <GenresRadioGroup name="genres" />
-                </div>
-              </div>
-              <div className="flex-1 justify-center align-middle">
-              <h3 className="flex justify-center text-white">Movie Length</h3>
-              <div className="flex  justify-center align-middle">
-              
-                    <FormikSlider
-                      nameAbove="movieLengthBelow"
-                      nameBelow="movieLengthAbove" // ovo je naopako ali radi lol
-                      getAriaLabel={() => "Movie Length"}
-                      min={30}
-                      max={300}
+    <div >
+      <div className="flex justify-center align-middle">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form className="w-full  sm:m-3 ">
+              <div className="flex flex-col sm:flex-row w-full  space-x-4 ">
+                <div className="flex-1">
+                  <div className="flex flex-col justify-center align-middle ml-2">
+                    <label
+                      className="flex justify-center text-white"
+                      htmlFor="cast"
+                    >
+                      Cast
+                    </label>
+                    <Field
+                      type="text"
+                      id="cast"
+                      name="cast"
+                      className="block w-full p-2 text-gray-900   rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
+                    <ErrorMessage name="cast" />
                   </div>
-                <h3 className="flex justify-center text-white">Movie Rating</h3>
-                  <div className="flex  justify-center align-middle">
-                    <FormikSlider
-                      nameAbove="movieRatingBelow"
-                      nameBelow="movieRatingAbove" // ovo je naopako ali radi lol
-                      getAriaLabel={() => "Movie Rating"}
-                      min={0}
-                      max={10}
+                  <h3 className="flex justify-center my-3 text-white">Genres</h3>
+                  <div>
+                    <GenresRadioGroup name="genres" />
+                  </div>
+                </div>
+                <div className="flex-1 ">
+        
+                    <h3 className="flex justify-center text-white">Movie Length</h3>
+                    <div className="flex justify-center align-middle">
+                      <FormikSlider
+                        nameAbove="movieLengthBelow"
+                        nameBelow="movieLengthAbove" // ovo je naopako ali radi lol
+                        getAriaLabel={() => "Movie Length"}
+                        min={30}
+                        max={300}
+                      />
+                    </div>
+                    <h3 className="flex justify-center text-white">Movie Rating</h3>
+                    <div className="flex  justify-center align-middle">
+                      <FormikSlider
+                        nameAbove="movieRatingBelow"
+                        nameBelow="movieRatingAbove" // ovo je naopako ali radi lol
+                        getAriaLabel={() => "Movie Rating"}
+                        min={0}
+                        max={10}
+                      />
+                    </div>
+        
+                </div>
+                <div className="flex-1">
+                  <div className="flex flex-col justify-center align-middle mr-3">
+                    <label
+                      className="flex justify-center text-white"
+                      htmlFor="releaseYear"
+                    >
+                      Release Year
+                    </label>
+                    <Field
+                      type="number"
+                      id="releaseYear"
+                      name="releaseYear"
+                      className="block w-full p-2 text-gray-900  rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
+                    <ErrorMessage name="releaseYear" />
                   </div>
-              
-              </div>
-              <div className="flex-1">
-                <div className="flex flex-col justify-center align-middle">
-                  <label className="flex justify-center text-white" htmlFor="releaseYear">Release Year</label>
-                  <Field
-                    type="number"
-                    id="releaseYear"
-                    name="releaseYear"
-                    className="border-2 border-black"
-                  />
-                  <ErrorMessage name="releaseYear" />
+                  <div className="flex flex-col my-3 justify-center align-middle">
+                    <MediaGroup name="mediaType" />
+                    <ErrorMessage name="mediaType" />
+                  </div>
                 </div>
-                <div className="flex flex-col justify-center align-middle">
-                  <MediaGroup name="mediaType" />
-                  <ErrorMessage name="mediaType" />
-                </div>
-              
               </div>
-            </div>
-            <div className=" flex justify-center align-middle">
-              {isSubmitting ? (
-                <div>Submitting...</div>
-              ) : (
-                <button type="submit" className=" text-white bg-blue-600 p-3 rounded-full">Submit</button>
-              )}
-            </div>
-          </Form>
-        )}
-      </Formik>
-
+              <div className=" flex justify-center align-middle">
+                {isSubmitting ? (
+                  <div>Submitting...</div>
+                ) : (
+                  <button
+                    type="submit"
+                    className=" text-white bg-[#26a8c4] hover:bg-[#3ea1b8] px-10 py-2 rounded-full"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
+            </Form>
+        
+          )}
+        </Formik>
+      </div>
       {movieData.map((movie) => (
-        <h2 key={movie.id}>{movie.title}</h2>
+        <div key={movie.title} className="flex justify-center align-middle"><MovieCard image={movie.backdrop_path} title={movie.title} actors={movie.cast} rating={movie.rating}/></div>
       ))}
+      
     </div>
+   
   );
 };
 

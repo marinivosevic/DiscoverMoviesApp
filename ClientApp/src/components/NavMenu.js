@@ -9,22 +9,22 @@ export class NavMenu extends Component {
         <nav className=" border-gray-200 border-b ">
           <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto ">
             <a
-              href="https://flowbite.com/"
+              href="/"
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="h-8"
+                src="/4c6705a5fdb34cf5ba435b6c4453452c-free-removebg-preview.png"
+                className="h-16"
                 alt="Flowbite Logo"
               />
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Flowbite
+                FindYourMovie
               </span>
             </a>
             <div className="flex md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse">
               <button
                 type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="text-white bg-[#26a8c4] hover:hover:bg-[#3ea1b8] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-[#26a8c4] dark:hover:bg-[#3ea1b8] dark:focus:ring-blue-800"
               >
                 Login 
               </button>
@@ -61,7 +61,7 @@ export class NavMenu extends Component {
                 <li>
                   <a
                     href="#"
-                    className="block py-2 px-3 md:p-0 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500"
+                    className="block py-2 px-3 md:p-0 text-white bg-[#26a8c4] rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500"
                     aria-current="page"
                   >
                     Home

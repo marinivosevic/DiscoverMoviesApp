@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useField, useFormikContext } from "formik";
+import React, { useState } from "react";
+import { useFormikContext } from "formik";
 
 const genres = [
   { id: 28, name: "Action" },
@@ -20,7 +20,7 @@ const genres = [
   { id: 10770, name: "TV Movie" },
   { id: 53, name: "Thriller" },
   { id: 10752, name: "War" },
-  { id: 37, name: "Western" }
+  { id: 37, name: "Western" },
 ];
 
 const GenreSelector = ({ name }) => {
@@ -47,38 +47,37 @@ const GenreSelector = ({ name }) => {
     setFieldValue(name, selectedGenres);
   };
 
-  const columns = 3; // Number of columns in the table
+  
 
   return (
     <div>
-      <table className="table-auto w-full border-collapse border border-gray-300">
-        <tbody>
-          {Array.from({ length: Math.ceil(displayedGenres.length / columns) }).map((_, rowIndex) => (
-            <tr key={rowIndex}>
-              {displayedGenres.slice(rowIndex * columns, rowIndex * columns + columns).map((genre) => (
-                <td key={genre.id} className="border border-gray-300 px-4 py-2">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={genre.name}
-                      name={name}
-                      value={genre.name}
-                      onChange={handleChange}
-                      checked={values[name].includes(genre.name)}
-                      className="mr-2 text-white"
-                    />
-                    {genre.name}
-                  </label>
-                </td>
-              ))}
+      <table className="table-auto w-full mx-2">
+        <tbody className="grid grid-cols-2 lg:grid-cols-3 gap-2 w-full ">
+          {displayedGenres.map((genre) => (
+            <tr key={genre.id} className="contents ">
+              <td className="border rounded-xl border-gray-600 px-3  py-2 ">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={genre.name}
+                    name={name}
+                    value={genre.name}
+                    onChange={handleChange}
+                    checked={values[name].includes(genre.name)}
+                    className="mr-2 leading-tight"
+                  />
+                  <p className="text-white truncate text-sm">{genre.name}</p>
+                </label>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
       <button
         type="button"
         onClick={handleShowMore}
-        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+        className="mt-2 ml-2 bg-[#26a8c4] hover:bg-[#3ea1b8] text-white px-4 py-2 rounded"
       >
         {showAll ? "Show Less" : "Show More"}
       </button>
