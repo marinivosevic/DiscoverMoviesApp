@@ -252,6 +252,27 @@ namespace ExpensesTracker.Services
             }
         }
 
+        public async Task<MovieDetails> GetMovieById(int id)
+        {
+            var queryParams = new Dictionary<string, string> { { "language", "en-US" } };
+            var response = await FetchDataFromApi<MovieDetails>(
+                $"https://api.themoviedb.org/3/movie/{id}",
+                queryParams
+            );
+
+            return response;
+        }
+
+        public async Task<Credits> GetCreditsById(int id){
+            var queryParams = new Dictionary<string, string> { { "language", "en-US" } };
+            var response = await FetchDataFromApi<Credits>(
+                $"https://api.themoviedb.org/3/movie/{id}/credits",
+                queryParams
+            );
+
+            return response;
+        }
+
         public async Task<List<Movie>> FetchDataFromApiForDiscoverEndpoint(
             string url,
             Dictionary<string, string> queryParams = null

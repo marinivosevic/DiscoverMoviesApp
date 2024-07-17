@@ -1,10 +1,12 @@
+using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 var allowedOrigin = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 // Add services to the container.
 /* var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString)); */
 
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
 {
@@ -16,7 +18,12 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
-
+if (app.Environment.IsDevelopment())
+{
+    
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

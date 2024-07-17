@@ -59,5 +59,25 @@ namespace ExpensesTracker.Controllers
 
             return BadRequest("Invalid data");
         }
+
+        [Route("api/[controller]/movie/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetMovieById(int id)
+        {
+            var movieService = new MovieService();
+            var movie = await movieService.GetMovieById(id);
+
+            return Ok(movie);
+        }
+
+        [Route("api/[controller]/movie/{id}/credits")]
+        [HttpGet]
+        public async Task<IActionResult> GetMovieCredits(int id)
+        {
+            var movieService = new MovieService();
+            var credits = await movieService.GetCreditsById(id);
+
+            return Ok(credits);
+        }
     }
 }

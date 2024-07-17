@@ -12,7 +12,7 @@ namespace ExpensesTracker.Services.Interfaces
         Task<IEnumerable<int>> GetGenres(string[] genreName);
         Task<IEnumerable<int>> GetCastId(string[] castNames);
 
-
+        
 
     }
 }

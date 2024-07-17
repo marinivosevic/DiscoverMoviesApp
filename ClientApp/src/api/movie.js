@@ -29,5 +29,37 @@ export const movieService = {
             throw error;
         }
         
-    }
+    },
+
+    useGetMovieDetails: async (data)  => {
+        try{
+            const response = await axiosInstance.get(`test/movie/${data.id}`, 
+                data,
+            );
+    
+            return response.data;
+        }
+        catch (error) {
+            console.error("Error fetching data:", error);
+            throw error;
+        }
+        
+    },
+
+    useGetMovieCredits: async (data)  => {
+        try{
+            const response = await axiosInstance.get(`test/movie/${data.id}/credits`, 
+                data,
+            );
+    
+            return response.data;
+        }
+        catch (error) {
+            console.error("Error fetching data:", error);
+            throw error;
+        }
+        
+    },
+
+
 }

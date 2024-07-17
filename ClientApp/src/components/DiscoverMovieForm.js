@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { movieService } from "../api/movie";
 import FormikSlider from "./FormikSlider";
 import MediaGroup from "./MediaGroup";
 import GenresRadioGroup from "./GenresRadioGroup";
-import MovieCard from "./MovieCard";
+import CircularProgress from '@mui/material/CircularProgress';
 const initialValues = {
   cast: "",
   genres: "",
@@ -28,9 +28,8 @@ const validationSchema = Yup.object({
   mediaType: Yup.string().required("Required"),
 });
 
-const DiscoverMovieForm = () => {
-  const [movieData, setMovieData] = useState([]);
-
+const DiscoverMovieForm = ({ setMovies }) => {
+ 
   const mapData = (values) => {
     const castArray = values.cast
       ? values.cast.split(",").map((actor) => actor.trim())
@@ -59,9 +58,7 @@ const DiscoverMovieForm = () => {
     movieService.useDiscoverMovies(data).then((response) => {
       console.log(response);
       if (response) {
-        response.forEach((element) => {
-          setMovieData((prev) => [...prev, element]);
-        });
+        setMovies(response);
       }
     });
   };
@@ -146,7 +143,7 @@ const DiscoverMovieForm = () => {
               </div>
               <div className=" flex justify-center align-middle">
                 {isSubmitting ? (
-                  <div>Submitting...</div>
+                  <div><CircularProgress /></div>
                 ) : (
                   <button
                     type="submit"
@@ -161,9 +158,7 @@ const DiscoverMovieForm = () => {
           )}
         </Formik>
       </div>
-      {movieData.map((movie) => (
-        <div key={movie.title} className="flex justify-center align-middle"><MovieCard image={movie.backdrop_path} title={movie.title} actors={movie.cast} rating={movie.rating}/></div>
-      ))}
+     
       
     </div>
    
