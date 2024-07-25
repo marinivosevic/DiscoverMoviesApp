@@ -1,53 +1,38 @@
-name: Deploy .NET API to AWS Elastic Beanstalk
-
+name: Deploy .NET
 on:
-  workflow_dispatch:
   pull_request:
-    types: cloesed
-    branches:
-      - main
-    paths:
-      - "Backend/**"
-
+    branches: [main]
+    types: closed
 jobs:
-  build:
+  build_deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v3
+    - name: Checkout source code
+      uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.x'  # Replace with your .NET version
-
-    - name: Restore dependencies
-      run: dotnet restore ./Backend
-
-    - name: Build
-      run: dotnet build ./Backend --configuration Release --no-restore
-
+        dotnet-version: '8.x'
     - name: Publish
-      run: dotnet publish ./Backend -c Release -o ./publish --no-restore
-
-    - name: Compress deployment package
-      run: zip -r ./deploy.zip ./publish/*
-
-    - name: Deploy to Elastic Beanstalk
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        EB_APPLICATION_NAME: ${{ secrets.EB_APPLICATION_NAME }}
-        EB_ENVIRONMENT_NAME: ${{ secrets.EB_ENVIRONMENT_NAME }}
-        CI: false
+      run: dotnet publish Backend/ExpensesTracker.csproj -o site
+    - name: Generate deployment package
+      run: cd site; zip -r ../deploy.zip . -x '*.git*'; cd ..
+    - name: Upload .NET to artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dotnet-zip
+        path: deploy.zip
+    - name: Setup EB CLI
       run: |
-        # Install the AWS Elastic Beanstalk CLI
-        pip install awsebcli
-        
-        # Initialize the Elastic Beanstalk application
-        eb init -p "dotnet-core" $EB_APPLICATION_NAME --region $AWS_REGION
-        
-        # Deploy to the Elastic Beanstalk environment
-        eb deploy $EB_ENVIRONMENT_NAME --staged --label "${GITHUB_SHA::8}"
+        python --version
+        pip --version
+        pip install awsebcli --upgrade --user
+        eb --version
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2 # More information on this action can be found below in the 'AWS Credentials' section
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+        role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
+        aws-region: 'us-east-1'
+    - name: Deploy to EB
+      run: eb deploy FindYourMovieAPI-env --staged
