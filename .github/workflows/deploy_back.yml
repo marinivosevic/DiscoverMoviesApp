@@ -1,10 +1,10 @@
-name: Build and Deploy
+name: Build backend and deploy to EC2
 
 on:
   workflow_dispatch: {}
 
 env:
-  applicationfolder: ExpensesTracker
+  applicationfolder: .
   AWS_REGION:  us-east-1
   S3BUCKET: codedeploystack-webappdeploymentbucket-smwi3drvdb8h
 
