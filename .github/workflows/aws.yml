@@ -1,6 +1,7 @@
 name: Deploy frontend to AWS S3 
 
 on:
+  workflow_dispatch: {}
   pull_request:
     branches: [main]
 
