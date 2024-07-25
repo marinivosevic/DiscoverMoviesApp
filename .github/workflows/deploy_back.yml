@@ -4,6 +4,8 @@ on:
   pull_request:
     branches: [main]
     types: closed
+env:
+ CI: false
 jobs:
   build_deploy:
     name: Build & Deploy
