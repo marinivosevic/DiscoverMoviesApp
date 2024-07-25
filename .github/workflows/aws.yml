@@ -43,5 +43,5 @@ jobs:
       uses: jeanlescure/react-deploy-to-s3-action@v1.1.0
       with:
         args: --acl public-read --follow-symlinks --delete
-        
+        source_dir: ${{ env.working-directory }}/build/
       
