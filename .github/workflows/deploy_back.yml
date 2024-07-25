@@ -42,7 +42,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
     - name: Initialize EB application
       run: |
-        eb init -p "dotnet-core" FindYourMovieAPI --region ${{ env.AWS_REGION }}
+        eb init -p "dotnet-core-8.0" FindYourMovieAPI --region ${{ env.AWS_REGION }}
         eb use FindYourMovieAPI-env
 
     - name: Deploy to EB
