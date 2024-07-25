@@ -32,8 +32,8 @@ jobs:
         npm install
     - name: Production build      
       run: |        
-        unset CI
         run: npm run build
+        working-directory: ${{ env.working-directory }}
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
