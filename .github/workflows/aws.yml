@@ -42,5 +42,5 @@ jobs:
       uses: jakejarvis/s3-sync-action@master
       with:
         args: --acl public-read --delete
-        source_dir: ${{ env.working-directory }}/build/ 
+        SOURCE_DIR: ${{ env.working-directory }}/dist/ 
       
