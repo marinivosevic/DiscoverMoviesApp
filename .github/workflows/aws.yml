@@ -13,6 +13,7 @@ env:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       working-directory: "./Backend/ClientApp"
+      SOURCE_DIR: ${{ env.working-directory }}/build
       CI: false
       
         
@@ -38,9 +39,9 @@ jobs:
       run: npm run build
       working-directory: ${{ env.working-directory }}
 
-    - name: Deploy to S3
-      uses: jakejarvis/s3-sync-action@master
+    - name: React Deploy to S3
+      uses: jeanlescure/react-deploy-to-s3-action@v1.1.0
       with:
-        args: --acl public-read --delete
-        SOURCE_DIR: ${{ env.working-directory }}/dist/ 
+        args: --acl public-read --follow-symlinks --delete
+        
       
