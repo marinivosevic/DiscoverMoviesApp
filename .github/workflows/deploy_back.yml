@@ -5,7 +5,10 @@ on:
     branches: [main]
     types: closed
 env:
- CI: false
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  CI: false
 jobs:
   build_deploy:
     name: Build & Deploy
