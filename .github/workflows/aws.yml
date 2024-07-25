@@ -32,7 +32,7 @@ jobs:
         npm install
     - name: Production build      
       run: |        
-        run: npm run build
+        npm run build
         working-directory: ${{ env.working-directory }}
 
     - name: Deploy to S3
