@@ -9,7 +9,7 @@ env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      SOURCE_DIR: "Backend/ClientApp"
+      working-directory: "Backend/ClientApp"
         
 jobs:
   build:
@@ -26,14 +26,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Git checkout
       uses: actions/checkout@v4
-    - name: Install packages
-      run: |
-        cd Backend/ClientApp
-        npm install
-    - name: Production build      
-      run: |        
-        npm run build
-        working-directory: ${{ env.working-directory }}
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ${{ env.working-directory }}
+    - name: Build the project
+      run: npm run build
+      working-directory: ${{ env.working-directory }}
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
