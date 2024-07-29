@@ -48,4 +48,4 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Deploy app build to S3 bucket
-        run: aws s3 sync ./Backend/ClientApp/build s3://findmymovie --delete
+        run: aws s3 sync ./Backend/ClientApp/build s3://findmymoviebucket --delete
