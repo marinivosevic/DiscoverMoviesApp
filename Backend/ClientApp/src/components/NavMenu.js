@@ -22,12 +22,15 @@ export class NavMenu extends Component {
               </span>
             </a>
             <div className="flex md:order-2 space-x-1 md:space-x-0 rtl:space-x-reverse">
-              <button
-                type="button"
-                className="text-white bg-[#26a8c4] hover:hover:bg-[#3ea1b8] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-[#26a8c4] dark:hover:bg-[#3ea1b8] dark:focus:ring-blue-800"
-              >
-                Login 
-              </button>
+              <a href="/Login">
+                <button
+                
+                  type="button"
+                  className="text-white bg-[#26a8c4] hover:hover:bg-[#3ea1b8] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-[#26a8c4] dark:hover:bg-[#3ea1b8] dark:focus:ring-blue-800"
+                >
+                  Login
+                </button>
+              </a>
               <button
                 data-collapse-toggle="navbar-cta"
                 type="button"

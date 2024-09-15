@@ -8,7 +8,11 @@ import MovieLayout from "./Views/MovieLayout";
 import ErrorPage from "./components/ErrorPage";
 import "./custom.css";
 import MainLayout from "./Views/MainLayout";
-
+import Login from "./Views/Login"
+import Register from "./Views/Register"
+import ProtectedRoutes  from "./Routes/ProtectedRoutes";
+import Profile from "./Views/Profile";
+import  AuthProvider  from "./Context/AuthContext";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,12 +29,37 @@ const router = createBrowserRouter([
       }
     ],
 
+
+
   },
+  {
+    path:"/profile",
+    element:<ProtectedRoutes layout={MainLayout} />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <Profile />,
+      },
+    ],
+  },
+  {
+    path: "/Login",
+    element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/Register",
+    element: <Register />,
+    errorElement: <ErrorPage />,
+  }
   
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <AuthProvider isSignedIn = {false}>
+    <RouterProvider router={router} />
+  </AuthProvider>
 );
 
 serviceWorkerRegistration.unregister();

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
-    [Authorize]
+     [Authorize] 
     [ApiController]
     public class ReviewController : ControllerBase
     {

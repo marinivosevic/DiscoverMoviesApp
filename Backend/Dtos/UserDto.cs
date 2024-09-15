@@ -5,5 +5,6 @@ namespace Backend.Dtos
          int Id ,
          string Name  ,        
          string Email 
+        
     );
 }

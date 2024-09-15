@@ -2,31 +2,23 @@ using ExpensesTracker.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var allowedOrigin = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 26)));
-});
+    options.UseSqlite(connectionString));
 
- builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
-        };
-    });
 
+
+  builder.Services.AddAuthentication();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddAuthentication();
 builder.Services.AddAuthorization(); 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -55,7 +47,7 @@ else
 {
     app.UseHsts();
 }
-
+app.MapIdentityApi<IdentityUser>();
 // Configure the HTTP request pipeline.
 app.UseCors("myAppCors");
 app.UseHttpsRedirection();

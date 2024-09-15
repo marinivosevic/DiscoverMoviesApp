@@ -4,7 +4,7 @@ using Backend.Dtos;
 using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 namespace Backend.Controllers{
-    [Authorize]
+    [Authorize] 
     [ApiController]
     public class UserController : ControllerBase
     {
