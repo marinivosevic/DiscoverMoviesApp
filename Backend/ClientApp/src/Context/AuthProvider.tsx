@@ -1,19 +1,20 @@
-import React, { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+  AuthContextData,
+  AuthContextProps,
+  AuthContextType,
+} from "../types/Auth";
+import { createContext, useState } from "react";
+import React from "react";
 
-import { User } from '../../types/User'; // Assuming the User module is located in the '../types' directory.
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const AuthContext = createContext<User | null>(null);
-
-type AuthProviderProps = PropsWithChildren & {
-  isSignedIn?: boolean;
+export const AuthProvider = ({ children }: AuthContextProps) => {
+  const [auth, setAuth] = useState<AuthContextData | null>(null);
+  return (
+    <AuthContext.Provider value={{ auth, setAuth }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default function AuthProvider({
-  children,
-  isSignedIn,
-}: AuthProviderProps) {
-  
-  const [user] = useState<User | null>(isSignedIn ? { id: 1, username: 'example', email: 'example@example.com' } : null);
-
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
-}
+export default AuthContext;

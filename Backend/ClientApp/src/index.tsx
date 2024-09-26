@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css";
-import React from "react";
+
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
@@ -12,7 +12,8 @@ import Login from "./Views/Login"
 import Register from "./Views/Register"
 import ProtectedRoutes  from "./Routes/ProtectedRoutes";
 import Profile from "./Views/Profile";
-import  AuthProvider  from "./Context/AuthContext";
+import  {AuthProvider}  from "./Context/AuthProvider";
+import React from "react";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <AuthProvider isSignedIn = {false}>
+  <AuthProvider>
     <RouterProvider router={router} />
   </AuthProvider>
 );

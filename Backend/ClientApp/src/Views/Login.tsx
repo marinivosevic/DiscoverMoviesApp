@@ -1,17 +1,21 @@
-import React from "react";
+
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@mui/joy/Button";
+import React from "react";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import useAuthService from "../api/auth";
+
 const LoginSchema = Yup.object({
   username: Yup.string().required("Required"),
   password: Yup.string()
     .required("Required")
     .min(6, "Password is too short")
     .max(20, "Password is too long")
-    .matches(
+    /* .matches(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/,
       "Password must contain at least one letter and one number"
-    ),
+    ), */
 });
 
 const Login = () => {
@@ -19,10 +23,25 @@ const Login = () => {
     username: "",
     password: "",
   };
+  const navigate = useNavigate();
+  const { login } = useAuthService();
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
+  
+
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await login(values.username, values.password);
+      if (response.accessToken) {
+        navigate("/profile");
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
