@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { axiosInstance } from "./config/axios";
 import useAuth from "../Hooks/useAuth";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const useAuthService = () => {
   const { setAuth } = useAuth();
-
+  const navigate = useNavigate();
   const login = async (email: string, password: string) => {
     try {
       const response = await axiosInstance.post(
@@ -33,7 +34,10 @@ const useAuthService = () => {
         { email, password },
         { withCredentials: true }
       );
-      return response.data;
+      if (response.status === 200) {
+        return response.status; 
+      }
+      
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;

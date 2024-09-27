@@ -2,17 +2,22 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Button from "@mui/joy/Button";
 import * as Yup from "yup";
+
+import useAuthService from "../api/auth";
+import { useNavigate } from "react-router-dom";
 const RegisterSchema = Yup.object({
-  username: Yup.string().required("Required"),
+  email: Yup.string().required("Required"),
   password: Yup.string()
     .required("Required")
     .min(6, "Password is too short")
-    .max(20, "Password is too long")
-    .matches(
+    .max(20, "Password is too long"),
+  /* .matches(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/,
       "Password must contain at least one letter and one number"
-    ),
-  confirmPassword: Yup.string().required("Required").oneOf([Yup.ref("password")], "Passwords must match"),
+    ), */
+  confirmPassword: Yup.string()
+    .required("Required")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
 const Register = () => {
@@ -21,10 +26,21 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   };
-
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
+  const { register } = useAuthService();
+  const navigate = useNavigate();
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await register(values.email, values.password);
+      if (response === 200  ) {
+        navigate("/login");
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -46,16 +62,16 @@ const Register = () => {
               </h1>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                  <label htmlFor="username" className="mb-1 text-white">
-                    Username
+                  <label htmlFor="email" className="mb-1 text-white">
+                    Email
                   </label>
                   <Field
                     type="text"
-                    name="username"
+                    name="email"
                     className="rounded-lg w-full h-12 p-2"
                   />
                   <ErrorMessage
-                    name="username"
+                    name="email"
                     component="div"
                     className="text-red-500"
                   />
